@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ASIHTTPRequest.h"
+#import "SBJson.h"
+#import "HBTile.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <ASIHTTPRequestDelegate>
+- (IBAction)requestNewGame:(id)sender;
 
 @end
