@@ -32,7 +32,6 @@
 		439DD7ED165C9DA1003B9CF8 /* SBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = 439DD7DF165C9DA1003B9CF8 /* SBJsonTokeniser.m */; };
 		439DD7EE165C9DA1003B9CF8 /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = 439DD7E1165C9DA1003B9CF8 /* SBJsonUTF8Stream.m */; };
 		439DD7EF165C9DA1003B9CF8 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 439DD7E3165C9DA1003B9CF8 /* SBJsonWriter.m */; };
-		439DD7F2165CA1C3003B9CF8 /* HBTile.m in Sources */ = {isa = PBXBuildFile; fileRef = 439DD7F1165CA1C3003B9CF8 /* HBTile.m */; };
 		43C7D7C41644460F00981160 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43C7D7C31644460F00981160 /* UIKit.framework */; };
 		43C7D7C61644460F00981160 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43C7D7C51644460F00981160 /* Foundation.framework */; };
 		43C7D7C81644460F00981160 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43C7D7C71644460F00981160 /* CoreGraphics.framework */; };
@@ -49,6 +48,8 @@
 		43C7D7EA1644461000981160 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43C7D7C51644460F00981160 /* Foundation.framework */; };
 		43C7D7F21644461000981160 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 43C7D7F01644461000981160 /* InfoPlist.strings */; };
 		43C7D7F51644461000981160 /* HackberryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 43C7D7F41644461000981160 /* HackberryTests.m */; };
+		FC3F7A23168B6D4800726452 /* HBPlayBoardController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC3F7A22168B6D4800726452 /* HBPlayBoardController.m */; };
+		FC3F7A2D168B7C7200726452 /* HBTile.m in Sources */ = {isa = PBXBuildFile; fileRef = FC3F7A2C168B7C7200726452 /* HBTile.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,8 +114,6 @@
 		439DD7E1165C9DA1003B9CF8 /* SBJsonUTF8Stream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonUTF8Stream.m; sourceTree = "<group>"; };
 		439DD7E2165C9DA1003B9CF8 /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
 		439DD7E3165C9DA1003B9CF8 /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
-		439DD7F0165CA1C3003B9CF8 /* HBTile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HBTile.h; sourceTree = "<group>"; };
-		439DD7F1165CA1C3003B9CF8 /* HBTile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HBTile.m; sourceTree = "<group>"; };
 		43C7D7BF1644460F00981160 /* Hackberry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hackberry.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43C7D7C31644460F00981160 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		43C7D7C51644460F00981160 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -137,6 +136,10 @@
 		43C7D7F11644461000981160 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		43C7D7F31644461000981160 /* HackberryTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HackberryTests.h; sourceTree = "<group>"; };
 		43C7D7F41644461000981160 /* HackberryTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HackberryTests.m; sourceTree = "<group>"; };
+		FC3F7A21168B6D4800726452 /* HBPlayBoardController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HBPlayBoardController.h; sourceTree = "<group>"; };
+		FC3F7A22168B6D4800726452 /* HBPlayBoardController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HBPlayBoardController.m; sourceTree = "<group>"; };
+		FC3F7A2B168B7C6A00726452 /* HBTile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HBTile.h; sourceTree = "<group>"; };
+		FC3F7A2C168B7C7200726452 /* HBTile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HBTile.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -272,9 +275,11 @@
 				43C7D7DB1644460F00981160 /* MainStoryboard.storyboard */,
 				43C7D7DE1644460F00981160 /* ViewController.h */,
 				43C7D7DF1644460F00981160 /* ViewController.m */,
+				FC3F7A21168B6D4800726452 /* HBPlayBoardController.h */,
+				FC3F7A22168B6D4800726452 /* HBPlayBoardController.m */,
+				FC3F7A2B168B7C6A00726452 /* HBTile.h */,
+				FC3F7A2C168B7C7200726452 /* HBTile.m */,
 				43C7D7CA1644460F00981160 /* Supporting Files */,
-				439DD7F0165CA1C3003B9CF8 /* HBTile.h */,
-				439DD7F1165CA1C3003B9CF8 /* HBTile.m */,
 			);
 			path = Hackberry;
 			sourceTree = "<group>";
@@ -446,7 +451,8 @@
 				439DD7ED165C9DA1003B9CF8 /* SBJsonTokeniser.m in Sources */,
 				439DD7EE165C9DA1003B9CF8 /* SBJsonUTF8Stream.m in Sources */,
 				439DD7EF165C9DA1003B9CF8 /* SBJsonWriter.m in Sources */,
-				439DD7F2165CA1C3003B9CF8 /* HBTile.m in Sources */,
+				FC3F7A23168B6D4800726452 /* HBPlayBoardController.m in Sources */,
+				FC3F7A2D168B7C7200726452 /* HBTile.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

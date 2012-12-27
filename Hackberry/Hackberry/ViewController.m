@@ -8,9 +8,6 @@
 
 #import "ViewController.h"
 
-@interface ViewController ()
-
-@end
 
 @implementation ViewController
 
@@ -26,12 +23,26 @@
     //[someAddButton addTarget:self action:@selector(someButtonClicked) forControlEvents:UIControlEventTouchUpInside];
     //[self.view addSubview:someAddButton];
     
-    HBTile *tile = [[HBTile alloc] initWithFrame:frame];
-    tile.backgroundColor = [UIColor blackColor];
-    [tile setTitle:@"added button" forState:UIControlStateNormal];
-    [tile addTarget:self action:@selector(test) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:tile];
+//    HBTile *tile = [[HBTile alloc] initWithFrame:frame];
+//    tile.backgroundColor = [UIColor blackColor];
+//    [tile setTitle:@"added button" forState:UIControlStateNormal];
+//    [tile addTarget:self action:@selector(test) forControlEvents:UIControlEventTouchUpInside];
+//    [self.view addSubview:tile];
     
+    
+    CGFloat outerHeight = self.view.frame.size.height;
+    CGFloat outerWidth = self.view.frame.size.width;
+
+    CGRect topbarFrame = CGRectMake(0, outerHeight/7.5, outerWidth, outerHeight/7.5);
+//    HBSelectionBar *topbar = [[HBSelectionBar alloc] initWithFrame:topbarFrame];
+//    topbar.backgroundColor = [UIColor grayColor];
+//    [self.view addSubview:topbar];
+//    
+//    CGRect matrixFrame = CGRectMake(0, outerHeight/3, outerWidth, outerHeight*2/3);
+//    HBWordsMatrix *matrix = [[HBWordsMatrix alloc] initWithFrame:matrixFrame];
+//    matrix.backgroundColor = [UIColor grayColor];
+//    [self.view addSubview:matrix];
+//    [matrix addTiles];
 }
 
 - (void)didReceiveMemoryWarning
