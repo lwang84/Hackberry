@@ -11,7 +11,7 @@
 
 @implementation HBTile
 
-@synthesize isInSelectedZone;
+@synthesize wasInSelectedZone;
 
 - (id)initWithFrameAndPosition:(CGRect)frame rowNum:(int)row colNum:(int)col
 {
@@ -62,14 +62,13 @@
 
     if (gesture.state == UIGestureRecognizerStateBegan)
     {
-        isInSelectedZone = false;
+        [self.delegate tileRequestUpdateWasInSelectedZone:self];
         priorPoint = point;
         self.layer.masksToBounds = NO;
         [self.delegate tileRequestBringToFront: self];
         //self.transform = CGAffineTransformRotate(CGAffineTransformIdentity, M_PI/12);
         [self setNeedsDisplay];
-
-
+        [self.delegate tileAboutToMove:self];
     }
     else if (gesture.state == UIGestureRecognizerStateChanged)
     {

@@ -15,6 +15,7 @@
 
 @implementation HBPlayBoardController
 
+@synthesize placeHolderTile;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -28,6 +29,8 @@
 {
     [super viewDidLoad];
     
+    placeHolderTile = [[HBTile alloc] init];
+    
     CGRect submitFrame = CGRectMake(240,6,70,40);
     UIButton *submitBtn = [[UIButton alloc] initWithFrame:submitFrame];
     [submitBtn setBackgroundColor:[UIColor blueColor]];
@@ -36,7 +39,7 @@
     [self.view addSubview:submitBtn];
     
     
-    submitBtn.layer.cornerRadius = 10; 
+    submitBtn.layer.cornerRadius = 10;
     submitBtn.clipsToBounds = YES;
     
     CGRect clearFrame = CGRectMake(20,6,60,30);
@@ -46,8 +49,8 @@
     [clearBtn addTarget:self action:@selector(clear:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:clearBtn];
 	
-    matrix = [[NSMutableArray alloc] init];
-    selectedTiles = [[NSMutableArray alloc] init];
+    self.matrix = [[NSMutableArray alloc] init];
+    self.upperZoneTiles = [[NSMutableArray alloc] init];
     
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 5; j++) {
@@ -66,7 +69,7 @@
             tile.delegate = self;
             [tile setTitle:@"A" forState:UIControlStateNormal];
             [self.view addSubview:tile];
-            [matrix addObject:tile];
+            [self.matrix addObject:tile];
         }
     }
     
@@ -75,6 +78,7 @@
     [request setDelegate:self];
     [request startAsynchronous];
 }
+
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
     NSString *responseString = [request responseString];
@@ -83,11 +87,11 @@
     NSDictionary *object = [parser objectWithString:responseString error:nil];
     NSString *letters = [object valueForKey:@"letters"];
     
-    for (int i = 0; i < matrix.count; i++) {
-        HBTile *tile = [matrix objectAtIndex:i];
+    for (int i = 0; i < self.matrix.count; i++) {
+        HBTile *tile = [self.matrix objectAtIndex:i];
         NSString *letter = [NSString stringWithFormat:@"%C", [letters characterAtIndex:i]];
         [tile setTitle:[letter capitalizedString] forState:UIControlStateNormal];
-
+        
     }
 }
 
@@ -106,7 +110,7 @@
 {
     CGFloat outerWidth = self.view.frame.size.width;
     CGFloat outerHeight = self.view.frame.size.height;
-    NSUInteger count = selectedTiles.count;
+    NSUInteger count = self.upperZoneTiles.count;
     double tileWidth = 40;
     if ((double)outerWidth*0.95/tileWidth < count)
     {
@@ -116,10 +120,36 @@
     return CGRectMake(outerWidth/2 + (idx - ((double)count)/2) * tileWidth, outerHeight*1/7.5, tileWidth,70);
 }
 
+- (int) calculateIdxToBeAdded: (HBTile *)tile
+{
+    if ([self.upperZoneTiles containsObject:tile]){
+        return -1;
+    }
+    else{
+        CGFloat outerWidth = self.view.frame.size.width;
+        NSUInteger count = self.upperZoneTiles.count;
+        double tileWidth = 40;
+        if ((double)outerWidth*0.95/tileWidth < count)
+        {
+            tileWidth = (double)outerWidth*0.95/count;
+        }
+        //when the tile is on the most left, the idx is count, weired
+        int idx = (tile.center.x - outerWidth/2)/tileWidth+(double)count/2 + 0.5;
+        if (idx > self.upperZoneTiles.count) {
+            idx = self.upperZoneTiles.count;
+        }
+        if (idx < 0)
+        {
+            idx = 0;
+        }
+        return idx;
+    }
+}
+
 - (CGRect)getShrinkedFrame: (CGRect) frame
 {
     CGFloat outerWidth = self.view.frame.size.width;
-    NSUInteger count = selectedTiles.count + 1;
+    NSUInteger count = self.upperZoneTiles.count + 1;
     double tileWidth = 40;
     if ((double)outerWidth*0.95/tileWidth < count)
     {
@@ -128,10 +158,132 @@
     return CGRectMake(frame.origin.x,frame.origin.y, tileWidth,70);
 }
 
+- (CGRect)getOriginalSizeFrame: (CGRect) frame
+{
+    CGFloat tileWidth = self.view.frame.size.width/5;
+    return CGRectMake(frame.origin.x,frame.origin.y, tileWidth,tileWidth);
+}
 
-- (void) adjustSelectedTilesPositions{
-    for (NSUInteger i = 0; i < selectedTiles.count; i++) {
-        HBTile *tile = [selectedTiles objectAtIndex:i];
+- (void) returnTiles:(NSMutableArray*)returningTiles{
+    for (NSUInteger i = 0; i < returningTiles.count; i++) {
+        HBTile *tile = [returningTiles objectAtIndex:i];
+        NSUInteger idx = [self.matrix indexOfObject:tile];
+        UIViewAnimationOptions options = UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveEaseOut;
+        [UIView animateWithDuration:0.4 delay:0.0 options:options animations:^{
+            tile.frame = [self getFrameForMatrixIdx:idx];
+        } completion:^(BOOL finished) {
+            tile.layer.masksToBounds = YES;
+        }];
+        
+    }
+}
+
+- (CGRect)requestFrameInMatrix:(HBTile *)requestor
+{
+    NSUInteger idx = [self.matrix indexOfObject:requestor];
+    int i = idx/5;
+    int j = idx - i*5;
+    CGFloat tileWidth = self.view.frame.size.width/5;
+    CGFloat outerHeight = self.view.frame.size.height;
+    CGRect frame = CGRectMake(tileWidth*i, tileWidth*j + outerHeight/3, tileWidth, tileWidth);
+    return frame;
+}
+
+- (void) removeEmptySpotInSelectedZone{
+    [self.upperZoneTiles removeObject:placeHolderTile];
+}
+
+- (void) tileTapped: (HBTile *)tile
+{
+    if ([self.upperZoneTiles containsObject:tile]){
+        [self.upperZoneTiles removeObject:tile];
+        NSMutableArray *returningTiles = [[NSMutableArray alloc] init];
+        [returningTiles addObject:tile];
+        [self returnTiles:returningTiles];        
+    }
+    else{
+        [self.upperZoneTiles addObject:tile];
+    }
+    [self adjustUpperZonePositions];
+}
+
+- (void) tileAboutToMove: (HBTile *)tile
+{
+    [self.upperZoneTiles removeObject:tile];
+}
+
+- (void) tileMoved: (HBTile *)tile
+{
+    if([self isInSelectedZone:tile]){
+        [self makeRoomForTile:tile];
+    }
+    else{
+        [self.upperZoneTiles removeObject:self.placeHolderTile];
+    }
+    [self adjustTileSize:tile];
+    [self adjustUpperZonePositions];
+}
+
+- (void) tileReleased: (HBTile *)tile
+{
+    [self.upperZoneTiles removeObject:self.placeHolderTile];
+    if ([self isInSelectedZone:tile]){
+        [self.upperZoneTiles insertObject:tile atIndex:[self  calculateIdxToBeAdded:tile]];
+        [self adjustUpperZonePositions];
+    }
+    else{
+        NSMutableArray *returningTiles = [[NSMutableArray alloc] init];
+        [returningTiles addObject:tile];
+        [self returnTiles:returningTiles];
+    }
+}
+
+- (void) makeRoomForTile: (HBTile *)tile
+{
+    [self.upperZoneTiles removeObject:placeHolderTile];
+    int idx = [self calculateIdxToBeAdded:tile];
+    [self.upperZoneTiles insertObject:placeHolderTile atIndex:idx];
+
+}
+
+- (Boolean) isInSelectedZone:(HBTile *)tile{
+    CGFloat outerHeight = self.view.frame.size.height;
+    if (tile.frame.origin.y < outerHeight*1.5/7.5) {
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+- (void) adjustTileSize: (HBTile *)tile
+{
+    if ([self isInSelectedZone:tile])
+    {
+        UIViewAnimationOptions options = UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveEaseOut;
+        [UIView animateWithDuration:0.2 delay:0.0 options:options animations:^{
+            tile.frame = [self getShrinkedFrame:tile.frame];
+        } completion:nil];
+        
+    }
+    else
+    {
+        UIViewAnimationOptions options = UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveEaseOut;
+        [UIView animateWithDuration:0.2 delay:0.0 options:options animations:^{
+            tile.frame = [self getOriginalSizeFrame:tile.frame];
+        } completion:nil];
+        
+    }
+    
+    
+}
+
+- (void) adjustUpperZonePositions{
+    for (NSUInteger i = 0; i < self.upperZoneTiles.count; i++) {
+        HBTile *tile = [self.upperZoneTiles objectAtIndex:i];
+        if (tile == placeHolderTile) {
+            continue;
+        }
         UIViewAnimationOptions options = UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveEaseOut;
         [UIView animateWithDuration:0.4 delay:0.0 options:options animations:^{
             tile.frame = [self getFrameForSelectedIdx:i];
@@ -141,97 +293,30 @@
     }
 }
 
-- (void) returnTiles:(NSMutableArray*)returningTiles{
-    for (NSUInteger i = 0; i < returningTiles.count; i++) {
-        HBTile *tile = [returningTiles objectAtIndex:i];
-        NSUInteger idx = [matrix indexOfObject:tile];
-        UIViewAnimationOptions options = UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveEaseOut;
-        [UIView animateWithDuration:0.4 delay:0.0 options:options animations:^{
-            tile.frame = [self getFrameForMatrixIdx:idx];
-        } completion:^(BOOL finished) {
-            tile.layer.masksToBounds = YES;
-        }];
-
-    }
-}
-
-- (CGRect)requestOriginalFrame:(HBTile *)requestor
-{
-    NSUInteger idx = [matrix indexOfObject:requestor];
-    int i = idx/5;
-    int j = idx - i*5;
-    CGFloat tileWidth = self.view.frame.size.width/5;
-    CGFloat outerHeight = self.view.frame.size.height;
-    CGRect frame = CGRectMake(tileWidth*i, tileWidth*j + outerHeight/3, tileWidth, tileWidth);
-    return frame;
-    
-}
-
-- (void) tileReleased: (HBTile *)tile
-{
-    if (tile.isInSelectedZone){
-        [selectedTiles addObject:tile];
-        [self adjustSelectedTilesPositions];
-        
-    }
-    else{
-        NSUInteger idx = [matrix indexOfObject:tile];
-        UIViewAnimationOptions options = UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveEaseOut;
-        [UIView animateWithDuration:0.4 delay:0.0 options:options animations:^{
-            tile.frame = [self getFrameForMatrixIdx:idx];
-        } completion:^(BOOL finished) {
-            tile.layer.masksToBounds = YES;
-        }];
-    }
-}
-
-- (void) tileTapped: (HBTile *)tile
-{
-    if ([selectedTiles containsObject:tile]) {
-        [selectedTiles removeObject:tile];
-        
-        NSMutableArray *returningTiles = [[NSMutableArray alloc] init];
-        [returningTiles addObject:tile];
-        [self returnTiles:returningTiles];
-        NSLog(@"removed");
-        
-    }
-    else{
-        [selectedTiles addObject:tile];
-        NSLog(@"added");
-    }
-    [self adjustSelectedTilesPositions];
-}
-
-- (void) tileMoved: (HBTile *)tile
-{
-    CGFloat outerHeight = self.view.frame.size.height;
-    if (tile.frame.origin.y < outerHeight*1.5/7.5)
-    {
-        UIViewAnimationOptions options = UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveEaseOut;
-        [UIView animateWithDuration:0.2 delay:0.0 options:options animations:^{
-            tile.frame = [self getShrinkedFrame:tile.frame];
-        } completion:nil];
-        tile.isInSelectedZone = true;
-    }
-    else
-    {
-        tile.isInSelectedZone = false;
-    }
-}
-
 - (void) tileRequestBringToFront: (HBTile *)tile
 {
     [self.view bringSubviewToFront:tile];
 }
 
+- (void) tileRequestUpdateWasInSelectedZone: (HBTile *)tile;
+{
+    if([self isInSelectedZone:tile])
+    {
+        tile.wasInSelectedZone = true;
+    }
+    else
+    {
+        tile.wasInSelectedZone = false;
+    }
+}
+
 
 - (void)submit:(UIButton *)sender
 {
+    [self.upperZoneTiles removeObject:self.placeHolderTile];
     NSString *selectedWord = @"";
-    for (NSUInteger i = 0; i < selectedTiles.count; i++) {
-        
-        HBTile *tile = [selectedTiles objectAtIndex:i];
+    for (NSUInteger i = 0; i < self.upperZoneTiles.count; i++) {
+        HBTile *tile = [self.upperZoneTiles objectAtIndex:i];        
         selectedWord = [selectedWord stringByAppendingString:[[tile titleLabel] text]];
     }
     NSLog(selectedWord);
@@ -240,9 +325,9 @@
 
 - (void)clear:(UIButton *)sender
 {
-    [self returnTiles:selectedTiles];
-    [selectedTiles removeAllObjects];
-
+    [self returnTiles:self.upperZoneTiles];
+    [self.upperZoneTiles removeAllObjects];
+    
 }
 
 - (void)didReceiveMemoryWarning

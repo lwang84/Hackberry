@@ -12,8 +12,10 @@
 @protocol HBTileDelegate
 - (void) tileRequestBringToFront: (HBTile *)tile;
 - (void) tileReleased: (HBTile *)tile;
+- (void) tileAboutToMove: (HBTile *)tile;
 - (void) tileMoved: (HBTile *)tile;
 - (void) tileTapped: (HBTile *)tile;
+- (void) tileRequestUpdateWasInSelectedZone: (HBTile *)tile;
 
 @end
 
@@ -27,7 +29,7 @@
 @property CGPoint priorPoint;
 @property CGRect originalFrame;
 @property (assign) id <HBTileDelegate> delegate;
-@property Boolean isInSelectedZone;
+@property Boolean wasInSelectedZone;
 
 
 @end

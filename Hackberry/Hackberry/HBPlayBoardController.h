@@ -12,11 +12,8 @@
 #import "SBJson.h"
 
 @interface HBPlayBoardController : UIViewController<ASIHTTPRequestDelegate, HBTileDelegate>
-{
-@private
-    NSMutableArray *matrix;
-    NSMutableArray *selectedTiles;
-}
+
 @property (retain) NSMutableArray *matrix;
-@property (retain) NSMutableArray *selectedTiles;
+@property (retain) NSMutableArray *upperZoneTiles;
+@property HBTile *placeHolderTile;
 @end
