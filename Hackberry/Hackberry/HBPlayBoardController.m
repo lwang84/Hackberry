@@ -25,30 +25,8 @@
     return self;
 }
 
-- (void)viewDidLoad
+- (void)initializeUpperLowerZones
 {
-    [super viewDidLoad];
-    
-    placeHolderTile = [[HBTile alloc] init];
-    
-    CGRect submitFrame = CGRectMake(240,6,70,40);
-    UIButton *submitBtn = [[UIButton alloc] initWithFrame:submitFrame];
-    [submitBtn setBackgroundColor:[UIColor blueColor]];
-    [submitBtn setTitle:@"SUBMIT" forState:UIControlStateNormal];
-    [submitBtn addTarget:self action:@selector(submit:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:submitBtn];
-    
-    
-    submitBtn.layer.cornerRadius = 10;
-    submitBtn.clipsToBounds = YES;
-    
-    CGRect clearFrame = CGRectMake(20,6,60,30);
-    UIButton *clearBtn = [[UIButton alloc] initWithFrame:clearFrame];
-    [clearBtn setBackgroundColor:[UIColor grayColor]];
-    [clearBtn setTitle:@"clear" forState:UIControlStateNormal];
-    [clearBtn addTarget:self action:@selector(clear:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:clearBtn];
-	
     self.matrix = [[NSMutableArray alloc] init];
     self.upperZoneTiles = [[NSMutableArray alloc] init];
     
@@ -72,8 +50,40 @@
             [self.matrix addObject:tile];
         }
     }
+}
+
+- (void)initializeFuntionalButtons
+{
+    CGRect submitFrame = CGRectMake(240,6,70,40);
+    UIButton *submitBtn = [[UIButton alloc] initWithFrame:submitFrame];
+    [submitBtn setBackgroundColor:[UIColor blueColor]];
+    [submitBtn setTitle:@"SUBMIT" forState:UIControlStateNormal];
+    [submitBtn addTarget:self action:@selector(submit:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:submitBtn];
+    submitBtn.layer.cornerRadius = 10;
+    submitBtn.clipsToBounds = YES;
     
-    NSURL *url = [NSURL URLWithString:@"http://127.0.0.1:8000/api/1/requestNewGame/"];
+    CGRect clearFrame = CGRectMake(20,6,60,30);
+    UIButton *clearBtn = [[UIButton alloc] initWithFrame:clearFrame];
+    [clearBtn setBackgroundColor:[UIColor grayColor]];
+    [clearBtn setTitle:@"clear" forState:UIControlStateNormal];
+    [clearBtn addTarget:self action:@selector(clear:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:clearBtn];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    placeHolderTile = [[HBTile alloc] init];
+    self.view.backgroundColor = [UIColor colorWithRed:240.0/256 green:239.0/256 blue:236.0/256 alpha:1];
+
+    [self requestNewGame:1];
+}
+
+- (void)requestNewGame:(int)playerId
+{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://127.0.0.1:8000/api/%d/requestNewGame/", playerId]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request setDelegate:self];
     [request startAsynchronous];
@@ -81,17 +91,50 @@
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
+    
+    [self initializeFuntionalButtons];
+    [self initializeUpperLowerZones];
+    
     NSString *responseString = [request responseString];
     
     SBJsonParser *parser = [[SBJsonParser alloc] init];
     NSDictionary *object = [parser objectWithString:responseString error:nil];
     NSString *letters = [object valueForKey:@"letters"];
+    NSString *colorStatus = [object valueForKey:@"colorStatus"];
     
     for (int i = 0; i < self.matrix.count; i++) {
         HBTile *tile = [self.matrix objectAtIndex:i];
-        NSString *letter = [NSString stringWithFormat:@"%C", [letters characterAtIndex:i]];
-        [tile setTitle:[letter capitalizedString] forState:UIControlStateNormal];
-        
+        NSString *letter = [[NSString stringWithFormat:@"%C", [letters characterAtIndex:i]] capitalizedString];
+        [tile setTitle:letter forState:UIControlStateNormal];
+        [tile setTitleColor:[UIColor colorWithRed:50.0/255 green:30.0/255 blue:28.0/255 alpha:1]
+                   forState:UIControlStateNormal];
+        tile.titleLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:30.0];
+        tile.backgroundColor = [self manufactorColorFromString:[NSString stringWithFormat:@"%C",[colorStatus characterAtIndex:i]]
+                                                      forIndex:i];
+    }
+}
+
+- (UIColor *) manufactorColorFromString:(NSString *) strColor forIndex: (int) idx
+{
+    if ([strColor isEqualToString:@"1"]) {
+        return [UIColor colorWithRed:0.0/255 green:164.0/255 blue:248.0/255 alpha:1];
+    }
+    else if ([strColor isEqualToString:@"3"]) {
+        return [UIColor colorWithRed:255.0/255 green:63.0/255 blue:56.0/255 alpha:1];
+    }
+    else if ([strColor isEqualToString:@"4"]){
+        return [UIColor colorWithRed:251.0/255 green:152.0/255 blue:143.0/255 alpha:1];
+    }
+    else if ([strColor isEqualToString:@"2"]) {
+        return [UIColor colorWithRed:114.0/255 green:201.0/255 blue:241.0/255 alpha:1];
+    }
+    else{
+        if (idx%2 == 1) {
+            return [UIColor colorWithRed:230.0/255 green:229.0/255 blue:226.0/255 alpha:1];
+        }
+        else{
+            return [UIColor colorWithRed:232.0/255 green:231.0/255 blue:228.0/255 alpha:1];
+        }
     }
 }
 
@@ -167,6 +210,7 @@
 - (void) returnTiles:(NSMutableArray*)returningTiles{
     for (NSUInteger i = 0; i < returningTiles.count; i++) {
         HBTile *tile = [returningTiles objectAtIndex:i];
+        [self.view bringSubviewToFront:tile];
         NSUInteger idx = [self.matrix indexOfObject:tile];
         UIViewAnimationOptions options = UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveEaseOut;
         [UIView animateWithDuration:0.4 delay:0.0 options:options animations:^{

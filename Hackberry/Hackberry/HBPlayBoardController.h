@@ -11,6 +11,11 @@
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
 
+@class HBPlayBoardController;
+@protocol HBPlayerBoardDataDelegate
+@end
+
+
 @interface HBPlayBoardController : UIViewController<ASIHTTPRequestDelegate, HBTileDelegate>
 
 @property (retain) NSMutableArray *matrix;

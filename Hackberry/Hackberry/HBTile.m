@@ -12,6 +12,9 @@
 @implementation HBTile
 
 @synthesize wasInSelectedZone;
+@synthesize priorPoint;
+@synthesize originalFrame;
+@synthesize delegate;
 
 - (id)initWithFrameAndPosition:(CGRect)frame rowNum:(int)row colNum:(int)col
 {

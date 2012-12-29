@@ -20,9 +20,6 @@
 @end
 
 @interface HBTile : UIButton{
-    CGPoint priorPoint;
-    id<HBTileDelegate> delegate;
-    CGRect originalFrame;
 
 }
 - (id)initWithFrameAndPosition:(CGRect)frame rowNum:(int)row colNum:(int)col;
