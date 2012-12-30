@@ -23,10 +23,10 @@
 
 }
 - (id)initWithFrameAndPosition:(CGRect)frame rowNum:(int)row colNum:(int)col;
+- (void) shakeIt;
 @property CGPoint priorPoint;
 @property CGRect originalFrame;
 @property (assign) id <HBTileDelegate> delegate;
 @property Boolean wasInSelectedZone;
-
 
 @end

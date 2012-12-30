@@ -16,6 +16,9 @@
 @implementation HBPlayBoardController
 
 @synthesize placeHolderTile;
+@synthesize isSmilyFacesDown;
+@synthesize blueSmilyFace;
+@synthesize redSmilyFace;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -23,6 +26,80 @@
         // Custom initialization
     }
     return self;
+    
+}
+
+- (void) setIsSmilyFacesDown:(Boolean)value
+{
+    if (isSmilyFacesDown != value) {
+        isSmilyFacesDown = value;
+        if(isSmilyFacesDown)
+        {
+            CGPoint center = CGPointMake(110, 80);
+            UIViewAnimationOptions options = UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveEaseOut;
+            [UIView animateWithDuration:0.3 delay:0.0 options:options animations:^{
+                self.blueSmilyFace.center = center;
+            } completion:nil];
+            
+            center = CGPointMake(210, 80);
+            [UIView animateWithDuration:0.3 delay:0.0 options:options animations:^{
+                self.redSmilyFace.center = center;
+            } completion:nil];
+        }
+        else
+        {
+            CGPoint center = CGPointMake(110, -40);
+            UIViewAnimationOptions options = UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveEaseOut;
+            [UIView animateWithDuration:0.3 delay:0.0 options:options animations:^{
+                self.blueSmilyFace.center = center;
+            } completion:nil];
+            
+            center = CGPointMake(210, -40);
+            [UIView animateWithDuration:0.3 delay:0.0 options:options animations:^{
+                self.redSmilyFace.center = center;
+            } completion:nil];
+        }
+
+    }
+}
+
+- (void)requestHighlightTiles:(NSArray*)tiles fromSmilyFace:(HBSmilyFace *)face
+{
+    for (int i = 0; i < tiles.count; i++) {
+        NSNumber *idx  = [tiles objectAtIndex:i];
+        HBTile *tile = [self.matrix objectAtIndex:[idx intValue]];
+        [tile shakeIt];
+    }
+    CGRect popOverFrame;
+    if (face == self.blueSmilyFace) {
+        popOverFrame = CGRectMake(120,90,0,0);
+    }
+    else{
+        popOverFrame = CGRectMake(200,90,0,0);
+    }
+    HBPlayedInfoPopOver* info = [[HBPlayedInfoPopOver alloc] initWithFrame:popOverFrame];
+    [self.view addSubview:info];
+    [info popOutAndPopIn];
+}
+
+- (void)initializeSmilyFaces
+{
+    self.isSmilyFacesDown = YES;
+    CGRect blueSmilyFrame = CGRectMake(70,40,80,80);
+    self.blueSmilyFace = [[HBSmilyFace alloc] initWithFrame:blueSmilyFrame
+                                                      Color:[UIColor colorWithRed:0.0/255 green:166.0/255 blue:248.0/255 alpha:1]
+                                                 FadedColor:[UIColor colorWithRed:0.0/255 green:85.0/255 blue:126.0/255 alpha:1]];
+    self.blueSmilyFace.backgroundColor = [UIColor clearColor];
+    self.blueSmilyFace.delegate = self;
+    [self.view addSubview:self.blueSmilyFace];
+    
+    CGRect redSmilyFrame = CGRectMake(170,40,80,80);
+    self.redSmilyFace = [[HBSmilyFace alloc] initWithFrame:redSmilyFrame
+                                                     Color:[UIColor colorWithRed:255.0/255 green:68.0/255 blue:59.0/255 alpha:1]
+                                                FadedColor:[UIColor colorWithRed:133.0/255 green:36.0/255 blue:31.0/255 alpha:1]];
+    self.redSmilyFace.backgroundColor = [UIColor clearColor];
+    self.redSmilyFace.delegate = self;
+    [self.view addSubview:self.redSmilyFace];
 }
 
 - (void)initializeUpperLowerZones
@@ -34,14 +111,6 @@
         for (int j = 0; j < 5; j++) {
             CGRect frame = [self getFrameForMatrixIdx:i*5+j];
             HBTile *tile = [[HBTile alloc] initWithFrameAndPosition:frame rowNum:i colNum:j];
-            if((i*5+j)%2 == 1)
-            {
-                tile.backgroundColor = [UIColor darkGrayColor];
-            }
-            else
-            {
-                tile.backgroundColor = [UIColor grayColor];
-            }
             
             [tile addTarget:self action:@selector(tileTapped:) forControlEvents:UIControlEventTouchUpInside];
             tile.delegate = self;
@@ -94,6 +163,7 @@
     
     [self initializeFuntionalButtons];
     [self initializeUpperLowerZones];
+    [self initializeSmilyFaces];
     
     NSString *responseString = [request responseString];
     
@@ -119,10 +189,10 @@
     if ([strColor isEqualToString:@"1"]) {
         return [UIColor colorWithRed:0.0/255 green:164.0/255 blue:248.0/255 alpha:1];
     }
-    else if ([strColor isEqualToString:@"3"]) {
+    else if ([strColor isEqualToString:@"4"]) {
         return [UIColor colorWithRed:255.0/255 green:63.0/255 blue:56.0/255 alpha:1];
     }
-    else if ([strColor isEqualToString:@"4"]){
+    else if ([strColor isEqualToString:@"3"]){
         return [UIColor colorWithRed:251.0/255 green:152.0/255 blue:143.0/255 alpha:1];
     }
     else if ([strColor isEqualToString:@"2"]) {
@@ -144,7 +214,7 @@
     int j = idx - i*5;
     CGFloat tileWidth = self.view.frame.size.width/5;
     CGFloat outerHeight = self.view.frame.size.height;
-    CGRect frame = CGRectMake(tileWidth*i, tileWidth*j + outerHeight/3, tileWidth, tileWidth);
+    CGRect frame = CGRectMake(tileWidth*j, tileWidth*i + outerHeight/3, tileWidth, tileWidth);
     return frame;
 }
 
@@ -216,7 +286,7 @@
         [UIView animateWithDuration:0.4 delay:0.0 options:options animations:^{
             tile.frame = [self getFrameForMatrixIdx:idx];
         } completion:^(BOOL finished) {
-            tile.layer.masksToBounds = YES;
+            tile.layer.shadowRadius = 0;
         }];
         
     }
@@ -243,12 +313,23 @@
         [self.upperZoneTiles removeObject:tile];
         NSMutableArray *returningTiles = [[NSMutableArray alloc] init];
         [returningTiles addObject:tile];
-        [self returnTiles:returningTiles];        
+        [self returnTiles:returningTiles];
+        if (self.upperZoneTiles.count == 0)
+        {
+            self.isSmilyFacesDown = YES;
+        }
+        else
+        {
+            self.isSmilyFacesDown = NO;
+        }
     }
     else{
         [self.upperZoneTiles addObject:tile];
+        self.isSmilyFacesDown = NO;
     }
     [self adjustUpperZonePositions];
+    
+    
 }
 
 - (void) tileAboutToMove: (HBTile *)tile
@@ -319,6 +400,14 @@
         
     }
     
+    if (self.upperZoneTiles.count == 0 && ![self isInSelectedZone:tile])
+    {
+        self.isSmilyFacesDown = YES;
+    }
+    else
+    {
+        self.isSmilyFacesDown = NO;
+    }
     
 }
 
@@ -332,7 +421,7 @@
         [UIView animateWithDuration:0.4 delay:0.0 options:options animations:^{
             tile.frame = [self getFrameForSelectedIdx:i];
         } completion:^(BOOL finished) {
-            tile.layer.masksToBounds = YES;
+            tile.layer.shadowRadius = 0;
         }];
     }
 }
@@ -371,6 +460,7 @@
 {
     [self returnTiles:self.upperZoneTiles];
     [self.upperZoneTiles removeAllObjects];
+    self.isSmilyFacesDown = YES;
     
 }
 

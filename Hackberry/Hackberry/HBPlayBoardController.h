@@ -10,15 +10,20 @@
 #import "HBTile.h"
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
+#import "HBSmilyFace.h"
+#import "HBPlayedInfoPopOver.h"
 
 @class HBPlayBoardController;
 @protocol HBPlayerBoardDataDelegate
 @end
 
 
-@interface HBPlayBoardController : UIViewController<ASIHTTPRequestDelegate, HBTileDelegate>
+@interface HBPlayBoardController : UIViewController<ASIHTTPRequestDelegate, HBTileDelegate, SmilyFaceDelegate>
 
 @property (retain) NSMutableArray *matrix;
 @property (retain) NSMutableArray *upperZoneTiles;
 @property HBTile *placeHolderTile;
+@property HBSmilyFace *blueSmilyFace;
+@property HBSmilyFace *redSmilyFace;
+@property Boolean isSmilyFacesDown;
 @end

@@ -48,8 +48,11 @@
 		43C7D7EA1644461000981160 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43C7D7C51644460F00981160 /* Foundation.framework */; };
 		43C7D7F21644461000981160 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 43C7D7F01644461000981160 /* InfoPlist.strings */; };
 		43C7D7F51644461000981160 /* HackberryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 43C7D7F41644461000981160 /* HackberryTests.m */; };
+		FC3C334916902D8500D3EFA8 /* HBPlayedInfoPopOver.m in Sources */ = {isa = PBXBuildFile; fileRef = FC3C334816902D8500D3EFA8 /* HBPlayedInfoPopOver.m */; };
 		FC3F7A23168B6D4800726452 /* HBPlayBoardController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC3F7A22168B6D4800726452 /* HBPlayBoardController.m */; };
 		FC3F7A2D168B7C7200726452 /* HBTile.m in Sources */ = {isa = PBXBuildFile; fileRef = FC3F7A2C168B7C7200726452 /* HBTile.m */; };
+		FC9748C1168ECE1A00CD58E5 /* HBSmilyFace.m in Sources */ = {isa = PBXBuildFile; fileRef = FC9748BF168ECE1A00CD58E5 /* HBSmilyFace.m */; };
+		FCEAB435168FFF440075414C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCEAB434168FFF440075414C /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -136,10 +139,15 @@
 		43C7D7F11644461000981160 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		43C7D7F31644461000981160 /* HackberryTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HackberryTests.h; sourceTree = "<group>"; };
 		43C7D7F41644461000981160 /* HackberryTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HackberryTests.m; sourceTree = "<group>"; };
+		FC3C334716902D8500D3EFA8 /* HBPlayedInfoPopOver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HBPlayedInfoPopOver.h; path = ../HBPlayedInfoPopOver.h; sourceTree = "<group>"; };
+		FC3C334816902D8500D3EFA8 /* HBPlayedInfoPopOver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HBPlayedInfoPopOver.m; path = ../HBPlayedInfoPopOver.m; sourceTree = "<group>"; };
 		FC3F7A21168B6D4800726452 /* HBPlayBoardController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HBPlayBoardController.h; sourceTree = "<group>"; };
 		FC3F7A22168B6D4800726452 /* HBPlayBoardController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HBPlayBoardController.m; sourceTree = "<group>"; };
 		FC3F7A2B168B7C6A00726452 /* HBTile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HBTile.h; sourceTree = "<group>"; };
 		FC3F7A2C168B7C7200726452 /* HBTile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HBTile.m; sourceTree = "<group>"; };
+		FC9748BF168ECE1A00CD58E5 /* HBSmilyFace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HBSmilyFace.m; sourceTree = "<group>"; };
+		FC9748C0168ECE1A00CD58E5 /* HBSmilyFace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HBSmilyFace.h; sourceTree = "<group>"; };
+		FCEAB434168FFF440075414C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +155,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCEAB435168FFF440075414C /* QuartzCore.framework in Frameworks */,
 				439DD7C5165C970F003B9CF8 /* libz.dylib in Frameworks */,
 				43C7D7C81644460F00981160 /* CoreGraphics.framework in Frameworks */,
 				439DD7C3165C96F8003B9CF8 /* MobileCoreServices.framework in Frameworks */,
@@ -234,6 +243,7 @@
 		43C7D7B41644460E00981160 = {
 			isa = PBXGroup;
 			children = (
+				FCEAB434168FFF440075414C /* QuartzCore.framework */,
 				43C7D7C91644460F00981160 /* Hackberry */,
 				439DD7C4165C970F003B9CF8 /* libz.dylib */,
 				43C7D7ED1644461000981160 /* HackberryTests */,
@@ -277,8 +287,12 @@
 				43C7D7DF1644460F00981160 /* ViewController.m */,
 				FC3F7A21168B6D4800726452 /* HBPlayBoardController.h */,
 				FC3F7A22168B6D4800726452 /* HBPlayBoardController.m */,
+				FC9748C0168ECE1A00CD58E5 /* HBSmilyFace.h */,
+				FC9748BF168ECE1A00CD58E5 /* HBSmilyFace.m */,
 				FC3F7A2B168B7C6A00726452 /* HBTile.h */,
 				FC3F7A2C168B7C7200726452 /* HBTile.m */,
+				FC3C334716902D8500D3EFA8 /* HBPlayedInfoPopOver.h */,
+				FC3C334816902D8500D3EFA8 /* HBPlayedInfoPopOver.m */,
 				43C7D7CA1644460F00981160 /* Supporting Files */,
 			);
 			path = Hackberry;
@@ -453,6 +467,8 @@
 				439DD7EF165C9DA1003B9CF8 /* SBJsonWriter.m in Sources */,
 				FC3F7A23168B6D4800726452 /* HBPlayBoardController.m in Sources */,
 				FC3F7A2D168B7C7200726452 /* HBTile.m in Sources */,
+				FC9748C1168ECE1A00CD58E5 /* HBSmilyFace.m in Sources */,
+				FC3C334916902D8500D3EFA8 /* HBPlayedInfoPopOver.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
